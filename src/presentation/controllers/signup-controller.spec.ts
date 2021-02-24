@@ -1,6 +1,6 @@
 import { SignUpController } from './signup-controller'
-import { InvalidParamError, MissingParamError, ServerError } from '../errors'
-import { badRequest } from '../helpers'
+import { InvalidParamError, MissingParamError } from '../errors'
+import { badRequest, serverError } from '../helpers'
 import { EmailValidatorSpy } from '../tests/mocks'
 
 import faker from 'faker'
@@ -95,7 +95,6 @@ describe('SignUp Controller', () => {
       }
     }
     const httpResponse = await sut.handle(request)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse).toEqual(serverError())
   })
 })
