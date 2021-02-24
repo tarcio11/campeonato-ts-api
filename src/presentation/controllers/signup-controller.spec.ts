@@ -4,9 +4,13 @@ import { badRequest } from '../helpers'
 
 import faker from 'faker'
 
+const makeSut = (): SignUpController => {
+  return new SignUpController()
+}
+
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', async () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const request = {
       body: {
         email: faker.internet.email(),
@@ -18,7 +22,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no email is provided', async () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const request = {
       body: {
         name: faker.name.findName(),
@@ -30,7 +34,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const sut = new SignUpController()
+    const sut = makeSut()
     const request = {
       body: {
         name: faker.name.findName(),
