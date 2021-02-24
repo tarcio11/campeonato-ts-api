@@ -2,8 +2,20 @@ import { SignUpController } from './signup-controller'
 import { InvalidParamError, MissingParamError } from '../errors'
 import { badRequest, serverError } from '../helpers'
 import { AddAccountSpy, EmailValidatorSpy } from '../tests/mocks'
+import { HttpRequest } from '../protocols'
 
 import faker from 'faker'
+
+const mockRequest = (): HttpRequest => {
+  const email = faker.internet.email()
+  return {
+    body: {
+      name: faker.name.findName(),
+      email,
+      password: faker.internet.email()
+    }
+  }
+}
 
 type SutTypes = {
   sut: SignUpController
@@ -62,54 +74,27 @@ describe('SignUp Controller', () => {
   test('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorSpy } = makeSut()
     emailValidatorSpy.isEmailValid = false
-    const request = {
-      body: {
-        name: faker.name.findName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-      }
-    }
-    const httpResponse = await sut.handle(request)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 
   test('Should calls EmailValidator with correct email', async () => {
     const { sut, emailValidatorSpy } = makeSut()
-    const email = faker.internet.email()
-    const request = {
-      body: {
-        name: faker.name.findName(),
-        email,
-        password: faker.internet.password()
-      }
-    }
+    const request = mockRequest()
     await sut.handle(request)
-    expect(emailValidatorSpy.email).toBe(email)
+    expect(emailValidatorSpy.email).toBe(request.body.email)
   })
 
   test('Should return 500 if EmailValidator throws', async () => {
     const { sut, emailValidatorSpy } = makeSut()
     jest.spyOn(emailValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
-    const request = {
-      body: {
-        name: faker.name.findName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-      }
-    }
-    const httpResponse = await sut.handle(request)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError())
   })
 
   test('Should calls AddAccount with correct values', async () => {
     const { sut, addAccountSpy } = makeSut()
-    const request = {
-      body: {
-        name: faker.name.findName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-      }
-    }
+    const request = mockRequest()
     await sut.handle(request)
     expect(addAccountSpy.params).toEqual(request.body)
   })
