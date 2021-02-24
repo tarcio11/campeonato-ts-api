@@ -1,6 +1,6 @@
 import { SignUpController } from './signup-controller'
 import { InvalidParamError, MissingParamError } from '../errors'
-import { badRequest, serverError } from '../helpers'
+import { badRequest, ok, serverError } from '../helpers'
 import { AddAccountSpy, EmailValidatorSpy } from '../tests/mocks'
 import { HttpRequest } from '../protocols'
 
@@ -109,7 +109,6 @@ describe('SignUp Controller', () => {
   test('Should return 200 if valid data is provided', async () => {
     const { sut, addAccountSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body).toBe(addAccountSpy.result)
+    expect(httpResponse).toEqual(ok(addAccountSpy.result))
   })
 })
