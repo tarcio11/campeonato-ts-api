@@ -69,4 +69,18 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
+
+  test('Should calls EmailValidator with correct email', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    const email = faker.internet.email()
+    const request = {
+      body: {
+        name: faker.name.findName(),
+        email,
+        password: faker.internet.password()
+      }
+    }
+    await sut.handle(request)
+    expect(emailValidatorSpy.email).toBe(email)
+  })
 })
