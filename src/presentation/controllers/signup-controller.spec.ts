@@ -1,19 +1,9 @@
 import { SignUpController } from './signup-controller'
-import { EmailValidator } from '../protocols'
 import { InvalidParamError, MissingParamError } from '../errors'
 import { badRequest } from '../helpers'
+import { EmailValidatorSpy } from '../tests/mocks'
 
 import faker from 'faker'
-
-class EmailValidatorSpy implements EmailValidator {
-  email: string
-  isEmailValid = true
-
-  isValid (email: string): boolean {
-    this.email = email
-    return this.isEmailValid
-  }
-}
 
 type SutTypes = {
   sut: SignUpController
