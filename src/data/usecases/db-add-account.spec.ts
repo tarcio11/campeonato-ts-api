@@ -1,6 +1,6 @@
 import { DbAddAccount } from './db-add-account'
 import { AddAccount } from '../../domain/usecases'
-import { Hasher } from '../protocols/cryptography/hasher'
+import { Hasher } from '../protocols'
 
 import faker from 'faker'
 

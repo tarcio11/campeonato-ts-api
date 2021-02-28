@@ -1,5 +1,5 @@
 import { AddAccount } from '../../domain/usecases'
-import { Hasher } from '../protocols/cryptography/hasher'
+import { Hasher } from '../protocols'
 
 export class DbAddAccount implements AddAccount {
   constructor (private readonly hasher: Hasher) {}
