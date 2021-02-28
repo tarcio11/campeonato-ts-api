@@ -1,6 +1,6 @@
 import { DbAddAccount } from './db-add-account'
 import { AddAccount } from '../../domain/usecases'
-import { Hasher } from '../protocols'
+import { HasherSpy } from '../tests/mocks'
 
 import faker from 'faker'
 
@@ -9,15 +9,6 @@ const mockAddAccountParams = (): AddAccount.Params => ({
   email: faker.internet.email(),
   password: faker.internet.password()
 })
-
-class HasherSpy implements Hasher {
-  digest = faker.random.uuid()
-  plaintext: string
-  async hash (plaintext: string): Promise<string> {
-    this.plaintext = plaintext
-    return this.digest
-  }
-}
 
 type SutTypes = {
   sut: DbAddAccount
