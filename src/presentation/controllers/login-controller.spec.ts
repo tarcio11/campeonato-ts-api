@@ -4,9 +4,13 @@ import faker from 'faker'
 import { badRequest } from '../helpers'
 import { MissingParamError } from '../errors'
 
+const makeSut = (): LoginController => {
+  return new LoginController()
+}
+
 describe('Login Controller', () => {
   test('Should return 400 if no email is provided', async () => {
-    const sut = new LoginController()
+    const sut = makeSut()
     const request = {
       body: {
         password: faker.internet.password()
@@ -17,7 +21,7 @@ describe('Login Controller', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const sut = new LoginController()
+    const sut = makeSut()
     const request = {
       body: {
         email: faker.internet.email()
