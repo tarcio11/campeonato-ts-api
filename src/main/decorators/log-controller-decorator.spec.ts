@@ -1,17 +1,9 @@
 import { LogControllerDecorator } from './log-controller-decorator'
 import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
-import { LogErrorRepository } from '../../data/protocols'
+import { LogErrorRepositorySpy } from '../../data/tests/mocks'
 import { ok, serverError } from '../../presentation/helpers'
 
 import faker from 'faker'
-
-class LogErrorRepositorySpy implements LogErrorRepository {
-  stack: string
-
-  async logError (stack: string): Promise<void> {
-    this.stack = stack
-  }
-}
 
 class ControllerSpy implements Controller {
   request: any
