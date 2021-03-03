@@ -1,5 +1,5 @@
 import { SignUpController } from './signup-controller'
-import { InvalidParamError, MissingParamError } from '../errors'
+import { InvalidParamError, MissingParamError, ServerError } from '../errors'
 import { badRequest, ok, serverError } from '../helpers'
 import { AddAccountSpy, EmailValidatorSpy } from '../tests/mocks'
 import { HttpRequest } from '../protocols'
@@ -89,7 +89,7 @@ describe('SignUp Controller', () => {
     const { sut, emailValidatorSpy } = makeSut()
     jest.spyOn(emailValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(serverError(new ServerError(null)))
   })
 
   test('Should calls AddAccount with correct values', async () => {
@@ -103,7 +103,7 @@ describe('SignUp Controller', () => {
     const { sut, addAccountSpy } = makeSut()
     jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(serverError(new ServerError(null)))
   })
 
   test('Should return 200 if valid data is provided', async () => {
