@@ -2,7 +2,7 @@ import { LoginController } from './login-controller'
 
 import faker from 'faker'
 import { badRequest } from '../helpers'
-import { MissingParamError } from '../errors'
+import { InvalidParamError, MissingParamError } from '../errors'
 import { EmailValidatorSpy } from '../tests/mocks'
 
 type SutTypes = {
@@ -52,5 +52,18 @@ describe('Login Controller', () => {
     }
     await sut.handle(request)
     expect(emailValidatorSpy.email).toBe(request.body.email)
+  })
+
+  test('Should return 400 if an invalid email is provided', async () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    emailValidatorSpy.isEmailValid = false
+    const request = {
+      body: {
+        email: faker.internet.email(),
+        password: faker.internet.password()
+      }
+    }
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 })
