@@ -1,20 +1,10 @@
 import { SignUpController } from './signup-controller'
 import { InvalidParamError, MissingParamError, ServerError } from '../errors'
 import { badRequest, ok, serverError } from '../helpers'
-import { AddAccountSpy, EmailValidatorSpy } from '../tests/mocks'
-import { HttpRequest, Validation } from '../protocols'
+import { AddAccountSpy, EmailValidatorSpy, ValidationSpy } from '../tests/mocks'
+import { HttpRequest } from '../protocols'
 
 import faker from 'faker'
-
-class ValidationSpy implements Validation {
-  input: any
-  error: Error = null
-
-  validate (input: any): Error {
-    this.input = input
-    return this.error
-  }
-}
 
 const mockRequest = (): HttpRequest => {
   const email = faker.internet.email()
