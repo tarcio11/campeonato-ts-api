@@ -1,4 +1,4 @@
-import { Controller, EmailValidator, HttpRequest, HttpResponse } from '../protocols'
+import { Controller, EmailValidator, HttpRequest, HttpResponse, Validation } from '../protocols'
 import { InvalidParamError, MissingParamError } from '../errors'
 import { badRequest, ok, serverError } from '../helpers'
 import { AddAccount } from '../../domain/usecases'
@@ -6,11 +6,13 @@ import { AddAccount } from '../../domain/usecases'
 export class SignUpController implements Controller {
   constructor (
     private readonly emailValidator: EmailValidator,
-    private readonly addAccount: AddAccount
+    private readonly addAccount: AddAccount,
+    private readonly validation: Validation
   ) {}
 
   async handle (request: HttpRequest): Promise<HttpResponse> {
     try {
+      this.validation.validate(request)
       const requiredFields = ['name', 'email', 'password']
       for (const field of requiredFields) {
         if (!request.body[field]) {
