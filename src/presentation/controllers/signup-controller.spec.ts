@@ -131,4 +131,11 @@ describe('SignUp Controller', () => {
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
   })
+
+  test('Should return 400 if Validation returns an error', async () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new MissingParamError(faker.random.word())
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
+  })
 })
