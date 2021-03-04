@@ -1,7 +1,7 @@
 import { Controller, EmailValidator, HttpRequest, HttpResponse } from '../protocols'
 import { Authentication } from '../../domain/usecases'
 import { InvalidParamError, MissingParamError } from '../errors'
-import { badRequest, serverError } from '../helpers'
+import { badRequest, serverError, unauthorized } from '../helpers'
 
 export class LoginController implements Controller {
   constructor (
@@ -22,7 +22,10 @@ export class LoginController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      await this.authentication.auth({ password, email })
+      const authenticationModel = await this.authentication.auth({ password, email })
+      if (!authenticationModel) {
+        return unauthorized()
+      }
     } catch (error) {
       return serverError(error)
     }
