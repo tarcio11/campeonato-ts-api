@@ -1,8 +1,7 @@
 import { LoginController } from './login-controller'
 import { HttpRequest } from '../protocols'
-import { Authentication } from '../../domain/usecases'
 import { InvalidParamError, MissingParamError, ServerError } from '../errors'
-import { EmailValidatorSpy } from '../tests/mocks'
+import { AuthenticationSpy, EmailValidatorSpy } from '../tests/mocks'
 import { badRequest, serverError } from '../helpers'
 
 import faker from 'faker'
@@ -13,19 +12,6 @@ const mockRequest = (): HttpRequest => {
       email: faker.internet.email(),
       password: faker.internet.password()
     }
-  }
-}
-
-class AuthenticationSpy implements Authentication {
-  params: Authentication.Params
-  result = {
-    accessToken: faker.random.uuid(),
-    name: faker.name.findName()
-  }
-
-  async auth (params: Authentication.Params): Promise<Authentication.Result> {
-    this.params = params
-    return this.result
   }
 }
 
