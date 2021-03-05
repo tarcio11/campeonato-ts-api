@@ -1,5 +1,5 @@
 import { LogControllerDecorator } from './log-controller-decorator'
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
+import { Controller, HttpResponse } from '../../presentation/protocols'
 import { LogErrorRepositorySpy } from '../../data/tests/mocks'
 import { ok, serverError } from '../../presentation/helpers'
 
@@ -9,7 +9,7 @@ class ControllerSpy implements Controller {
   request: any
   httpResponse = ok(faker.random.uuid())
 
-  async handle (request: HttpRequest): Promise<HttpResponse> {
+  async handle (request: any): Promise<HttpResponse> {
     this.request = request
     return this.httpResponse
   }
@@ -41,14 +41,14 @@ const makeSut = (): SutTypes => {
 describe('LogController Decorator', () => {
   test('Should call controller handle', async () => {
     const { sut, controllerSpy } = makeSut()
-    const request: any = faker.lorem.sentence()
+    const request = faker.lorem.sentence()
     await sut.handle(request)
     expect(controllerSpy.request).toEqual(request)
   })
 
   test('Should return the same result of the controller', async () => {
     const { sut, controllerSpy } = makeSut()
-    const httpResponse = await sut.handle(faker.lorem.sentence() as any)
+    const httpResponse = await sut.handle(faker.lorem.sentence())
     expect(httpResponse).toEqual(controllerSpy.httpResponse)
   })
 
@@ -56,7 +56,7 @@ describe('LogController Decorator', () => {
     const { sut, controllerSpy, logErrorRepositorySpy } = makeSut()
     const serverError = mockServerError()
     controllerSpy.httpResponse = serverError
-    await sut.handle(faker.lorem.sentence() as any)
+    await sut.handle(faker.lorem.sentence())
     expect(logErrorRepositorySpy.stack).toBe(serverError.body.stack)
   })
 })
