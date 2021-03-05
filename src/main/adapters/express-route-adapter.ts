@@ -4,7 +4,7 @@ import { Controller } from '../../presentation/protocols'
 export const adaptRoute = (controller: Controller) => {
   return async (req: Request, res: Response) => {
     const request = {
-      body: req.body
+      ...(req.body || {})
     }
     const httpResponse = await controller.handle(request)
     if (httpResponse.statusCode === 200) {
