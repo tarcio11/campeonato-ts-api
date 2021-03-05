@@ -1,7 +1,7 @@
 import { LoginController } from './login-controller'
 import { HttpRequest } from '../protocols'
 import { MissingParamError, ServerError } from '../errors'
-import { AuthenticationSpy, EmailValidatorSpy, ValidationSpy } from '../tests/mocks'
+import { AuthenticationSpy, ValidationSpy } from '../tests/mocks'
 import { badRequest, ok, serverError, unauthorized } from '../helpers'
 
 import faker from 'faker'
@@ -17,19 +17,16 @@ const mockRequest = (): HttpRequest => {
 
 type SutTypes = {
   sut
-  emailValidatorSpy: EmailValidatorSpy
   authenticationSpy: AuthenticationSpy
   validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorSpy = new EmailValidatorSpy()
   const authenticationSpy = new AuthenticationSpy()
   const validationSpy = new ValidationSpy()
-  const sut = new LoginController(emailValidatorSpy, authenticationSpy, validationSpy)
+  const sut = new LoginController(authenticationSpy, validationSpy)
   return {
     sut,
-    emailValidatorSpy,
     authenticationSpy,
     validationSpy
   }
