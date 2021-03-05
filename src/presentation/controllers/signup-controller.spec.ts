@@ -1,7 +1,7 @@
 import { SignUpController } from './signup-controller'
 import { MissingParamError, ServerError } from '../errors'
 import { badRequest, ok, serverError } from '../helpers'
-import { AddAccountSpy, EmailValidatorSpy, ValidationSpy } from '../tests/mocks'
+import { AddAccountSpy, ValidationSpy } from '../tests/mocks'
 import { HttpRequest } from '../protocols'
 
 import faker from 'faker'
@@ -19,19 +19,16 @@ const mockRequest = (): HttpRequest => {
 
 type SutTypes = {
   sut: SignUpController
-  emailValidatorSpy: EmailValidatorSpy
   addAccountSpy: AddAccountSpy
   validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorSpy = new EmailValidatorSpy()
   const addAccountSpy = new AddAccountSpy()
   const validationSpy = new ValidationSpy()
-  const sut = new SignUpController(emailValidatorSpy, addAccountSpy, validationSpy)
+  const sut = new SignUpController(addAccountSpy, validationSpy)
   return {
     sut,
-    emailValidatorSpy,
     addAccountSpy,
     validationSpy
   }
@@ -62,7 +59,7 @@ describe('SignUp Controller', () => {
     const { sut, validationSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
-    expect(validationSpy.input).toEqual(request)
+    expect(validationSpy.input).toEqual(request.body)
   })
 
   test('Should return 400 if Validation returns an error', async () => {
