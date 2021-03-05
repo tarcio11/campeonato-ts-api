@@ -2,9 +2,9 @@ import { LoginController } from './login-controller'
 import { MissingParamError, ServerError } from '../errors'
 import { AuthenticationSpy, ValidationSpy } from '../tests/mocks'
 import { badRequest, ok, serverError, unauthorized } from '../helpers'
+import { mockAuthenticationParams } from '../../domain/tests/mocks'
 
 import faker from 'faker'
-import { mockAuthenticationParams } from '../../domain/tests/mocks'
 
 type SutTypes = {
   sut
