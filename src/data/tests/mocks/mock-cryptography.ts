@@ -15,7 +15,7 @@ export class HasherSpy implements Hasher {
 export class HashComparerSpy implements HashComparer {
   plaintext: string
   digest: string
-  result: true
+  result = true
 
   async compare (plaintext: string, digest: string): Promise<boolean> {
     this.plaintext = plaintext
