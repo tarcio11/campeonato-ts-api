@@ -1,5 +1,5 @@
 import { SignUpController } from './signup-controller'
-import { InvalidParamError, MissingParamError, ServerError } from '../errors'
+import { MissingParamError, ServerError } from '../errors'
 import { badRequest, ok, serverError } from '../helpers'
 import { AddAccountSpy, EmailValidatorSpy, ValidationSpy } from '../tests/mocks'
 import { HttpRequest } from '../protocols'
@@ -38,27 +38,6 @@ const makeSut = (): SutTypes => {
 }
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if an invalid email is provided', async () => {
-    const { sut, emailValidatorSpy } = makeSut()
-    emailValidatorSpy.isEmailValid = false
-    const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
-  })
-
-  test('Should calls EmailValidator with correct email', async () => {
-    const { sut, emailValidatorSpy } = makeSut()
-    const request = mockRequest()
-    await sut.handle(request)
-    expect(emailValidatorSpy.email).toBe(request.body.email)
-  })
-
-  test('Should return 500 if EmailValidator throws', async () => {
-    const { sut, emailValidatorSpy } = makeSut()
-    jest.spyOn(emailValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
-    const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError(new ServerError(null)))
-  })
-
   test('Should calls AddAccount with correct values', async () => {
     const { sut, addAccountSpy } = makeSut()
     const request = mockRequest()
