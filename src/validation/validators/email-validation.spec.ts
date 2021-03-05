@@ -21,11 +21,18 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Email Validation', () => {
-  test('Should return an error if EmailValidator returns false', async () => {
+  test('Should return an error if EmailValidator returns false', () => {
     const { sut, emailValidatorSpy } = makeSut()
     emailValidatorSpy.isEmailValid = false
     const email = faker.internet.email()
-    const error = await sut.validate({ [field]: email })
+    const error = sut.validate({ [field]: email })
     expect(error).toEqual(new InvalidParamError(field))
+  })
+
+  test('Should calls EmailValidator with correct email', () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    const email = faker.internet.email()
+    sut.validate({ [field]: email })
+    expect(emailValidatorSpy.email).toBe(email)
   })
 })
