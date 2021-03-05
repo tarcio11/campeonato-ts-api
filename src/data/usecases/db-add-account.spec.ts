@@ -1,14 +1,6 @@
 import { DbAddAccount } from './db-add-account'
-import { AddAccount } from '../../domain/usecases'
 import { AddAccountRepositorySpy, HasherSpy } from '../tests/mocks'
-
-import faker from 'faker'
-
-const mockAddAccountParams = (): AddAccount.Params => ({
-  name: faker.name.findName(),
-  email: faker.internet.email(),
-  password: faker.internet.password()
-})
+import { mockAddAccountParams } from '../../domain/tests/mocks'
 
 type SutTypes = {
   sut: DbAddAccount
