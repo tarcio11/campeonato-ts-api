@@ -66,4 +66,14 @@ describe('AccountMongoRepository', () => {
       expect(account.accessToken).toBe(accessToken)
     })
   })
+
+  describe('checkByEmail()', () => {
+    test('Should return true if email is valid', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      await accountCollection.insertOne(addAccountParams)
+      const exist = await sut.checkByEmail(addAccountParams.email)
+      expect(exist).toBeTruthy()
+    })
+  })
 })
