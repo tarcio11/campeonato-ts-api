@@ -130,3 +130,4 @@ Essa Api tem como objetivo gerenciar um campeonato de futebol de video game feit
 * InsertOne e InserMany
 * DeleteMany
 * Upsert e ReturnOriginal
+* UpdateOne
