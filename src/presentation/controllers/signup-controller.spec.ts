@@ -48,10 +48,10 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 
-  test('Should return 200 if valid data is provided', async () => {
-    const { sut, addAccountSpy } = makeSut()
+  test('Should return 200 if valid credentials are provided', async () => {
+    const { sut, authenticationSpy } = makeSut()
     const httpResponse = await sut.handle(mockAddAccountParams())
-    expect(httpResponse).toEqual(ok(addAccountSpy.result))
+    expect(httpResponse).toEqual(ok(authenticationSpy.result))
   })
 
   test('Should calls Validation with correct values', async () => {
