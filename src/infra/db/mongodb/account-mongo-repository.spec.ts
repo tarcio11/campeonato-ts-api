@@ -3,6 +3,7 @@ import { MongoHelper } from './mongo-helper'
 import { mockAddAccountParams } from '../../../domain/tests/mocks'
 
 import { Collection } from 'mongodb'
+import faker from 'faker'
 
 const makeSut = (): AccountMongoRepository => {
   return new AccountMongoRepository()
@@ -24,9 +25,30 @@ describe('AccountMongoRepository', () => {
     await accountCollection.deleteMany({})
   })
 
-  test('Should return an account on success', async () => {
-    const sut = makeSut()
-    const isValid = await sut.add(mockAddAccountParams())
-    expect(isValid).toBe(true)
+  describe('add()', () => {
+    test('Should return an account on success', async () => {
+      const sut = makeSut()
+      const isValid = await sut.add(mockAddAccountParams())
+      expect(isValid).toBe(true)
+    })
+  })
+
+  describe('loadByEmail()', () => {
+    test('Should return an account on success', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      await accountCollection.insertOne(addAccountParams)
+      const account = await sut.loadByEmail(addAccountParams.email)
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe(addAccountParams.name)
+      expect(account.password).toBe(addAccountParams.password)
+    })
+
+    test('Should return null if loadByEmail fails', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByEmail(faker.internet.email())
+      expect(account).toBeFalsy()
+    })
   })
 })
