@@ -76,4 +76,30 @@ describe('AccountMongoRepository', () => {
       expect(exist).toBeTruthy()
     })
   })
+
+  describe('loadByToken()', () => {
+    let name = faker.name.findName()
+    let email = faker.internet.email()
+    let password = faker.internet.password()
+    let accessToken = faker.random.uuid()
+
+    beforeEach(() => {
+      name = faker.name.findName()
+      email = faker.internet.email()
+      password = faker.internet.password()
+      accessToken = faker.random.uuid()
+    })
+
+    test('Should return an account on loadByToken without accessToken', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name,
+        email,
+        password,
+        accessToken
+      })
+      const account = await sut.loadByToken(accessToken)
+      expect(account.id).toBeTruthy()
+    })
+  })
 })
