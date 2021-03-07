@@ -62,4 +62,10 @@ describe('DbLoadAccountByToken UseCase', () => {
     const promise = sut.load(token, role)
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an account on success', async () => {
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    const account = await sut.load(token, role)
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.result)
+  })
 })
