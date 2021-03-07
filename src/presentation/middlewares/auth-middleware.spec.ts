@@ -38,4 +38,12 @@ describe('AuthMiddleware', () => {
     expect(loadAccountByTokenSpy.accessToken).toEqual(request.accessToken)
     expect(loadAccountByTokenSpy.role).toEqual(role)
   })
+
+  test('Should return 403 if LoadAccountByToken returns null', async () => {
+    const role = 'any_role'
+    const { sut, loadAccountByTokenSpy } = makeSut(role)
+    loadAccountByTokenSpy.result = null
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
 })
