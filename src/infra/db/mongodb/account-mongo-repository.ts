@@ -1,7 +1,7 @@
 import { MongoHelper } from './mongo-helper'
-import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '../../../data/protocols'
+import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository } from '../../../data/protocols'
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository {
   async add (data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = accountCollection.insertOne(data)
@@ -43,5 +43,17 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
       }
     })
     return account
+  }
+
+  async loadByToken (accessToken: string, role?: string): Promise<LoadAccountByTokenRepository.Result> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({
+      accessToken
+    }, {
+      projection: {
+        _id: 1
+      }
+    })
+    return account && MongoHelper.map(account)
   }
 }
