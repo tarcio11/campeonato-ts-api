@@ -1,19 +1,22 @@
 import { DbLoadAccountByToken } from './db-load-account-by-token'
-import { DecrypterSpy } from '../tests/mocks'
+import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '../tests/mocks'
 
 import faker from 'faker'
 
 type SutTypes = {
   sut: DbLoadAccountByToken
   decrypterSpy: DecrypterSpy
+  loadAccountByTokenRepositorySpy: LoadAccountByTokenRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const decrypterSpy = new DecrypterSpy()
-  const sut = new DbLoadAccountByToken(decrypterSpy)
+  const loadAccountByTokenRepositorySpy = new LoadAccountByTokenRepositorySpy()
+  const sut = new DbLoadAccountByToken(decrypterSpy, loadAccountByTokenRepositorySpy)
   return {
     sut,
-    decrypterSpy
+    decrypterSpy,
+    loadAccountByTokenRepositorySpy
   }
 }
 
@@ -44,5 +47,12 @@ describe('DbLoadAccountByToken UseCase', () => {
     jest.spyOn(decrypterSpy, 'decrypt').mockImplementationOnce(() => { throw new Error() })
     const account = await sut.load(token, role)
     expect(account).toBeNull()
+  })
+
+  test('Should call LoadAccountByTokenRepository with correct values', async () => {
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    await sut.load(token, role)
+    expect(loadAccountByTokenRepositorySpy.token).toBe(token)
+    expect(loadAccountByTokenRepositorySpy.role).toBe(role)
   })
 })
