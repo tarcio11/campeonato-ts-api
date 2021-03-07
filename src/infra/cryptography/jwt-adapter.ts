@@ -11,7 +11,7 @@ export class JwtAdapter implements Encrypter, Decrypter {
   }
 
   async decrypt (ciphertext: string): Promise<string> {
-    jwt.verify(ciphertext, this.secret)
-    return null
+    const value = jwt.verify(ciphertext, this.secret)
+    return value as string
   }
 }
