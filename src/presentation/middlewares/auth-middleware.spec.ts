@@ -5,6 +5,10 @@ import { forbidden } from '../helpers'
 
 import faker from 'faker'
 
+const mockRequest = (): AuthMiddleware.Request => ({
+  accessToken: faker.random.uuid()
+})
+
 type SutTypes = {
   sut: AuthMiddleware
   loadAccountByTokenSpy: LoadAccountByTokenSpy
@@ -29,11 +33,9 @@ describe('AuthMiddleware', () => {
   test('Should call LoadAccountByToken with correct accessToken', async () => {
     const role = 'any_role'
     const { sut, loadAccountByTokenSpy } = makeSut(role)
-    const mockRequest: AuthMiddleware.Request = {
-      accessToken: faker.random.uuid()
-    }
-    await sut.handle(mockRequest)
-    expect(loadAccountByTokenSpy.accessToken).toEqual(mockRequest.accessToken)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(loadAccountByTokenSpy.accessToken).toEqual(request.accessToken)
     expect(loadAccountByTokenSpy.role).toEqual(role)
   })
 })
