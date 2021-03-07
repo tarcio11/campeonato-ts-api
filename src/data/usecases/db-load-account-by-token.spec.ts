@@ -31,4 +31,11 @@ describe('DbLoadAccountByToken UseCase', () => {
     await sut.load(token, role)
     expect(decrypterSpy.ciphertext).toBe(token)
   })
+
+  test('Should return null if Decrypter returns null', async () => {
+    const { sut, decrypterSpy } = makeSut()
+    decrypterSpy.plaintext = null
+    const account = await sut.load(token, role)
+    expect(account).toBeNull()
+  })
 })
