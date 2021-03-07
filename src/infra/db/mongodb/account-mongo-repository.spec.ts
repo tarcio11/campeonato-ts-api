@@ -127,5 +127,19 @@ describe('AccountMongoRepository', () => {
       const account = await sut.loadByToken(accessToken, 'admin')
       expect(account).toBeFalsy()
     })
+
+    test('Should return an account on loadByToken with if user is admin', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name,
+        email,
+        password,
+        accessToken,
+        role: 'admin'
+      })
+      const account = await sut.loadByToken(accessToken, 'admin')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+    })
   })
 })
