@@ -141,5 +141,11 @@ describe('AccountMongoRepository', () => {
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
     })
+
+    test('Should return null if loadByToken fails', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByToken(faker.random.uuid())
+      expect(account).toBeFalsy()
+    })
   })
 })
