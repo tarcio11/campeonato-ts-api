@@ -17,11 +17,17 @@ const makeSut = (): SutTypes => {
   }
 }
 
+let accountId: string
+let name: string
+
 describe('UpdateAvatar', () => {
+  beforeEach(async () => {
+    accountId = faker.random.uuid()
+    name = faker.internet.url()
+  })
+
   test('Should Calls LoadAccountByIdRepository with correct accountId', async () => {
     const { sut, loadAccountByIdRepositorySpy } = makeSut()
-    const accountId = faker.random.uuid()
-    const name = faker.image.avatar()
     await sut.update({ accountId, name })
     expect(loadAccountByIdRepositorySpy.accountId).toBe(accountId)
   })
@@ -29,8 +35,6 @@ describe('UpdateAvatar', () => {
   test('Should throws if LoadAccountByIdRepository throws', async () => {
     const { sut, loadAccountByIdRepositorySpy } = makeSut()
     jest.spyOn(loadAccountByIdRepositorySpy, 'loadById').mockImplementationOnce(() => { throw new Error() })
-    const accountId = faker.random.uuid()
-    const name = faker.image.avatar()
     const promise = sut.update({ accountId, name })
     await expect(promise).rejects.toThrow()
   })
@@ -38,8 +42,6 @@ describe('UpdateAvatar', () => {
   test('Should return null if LoadAccountByIdRepository returns null', async () => {
     const { sut, loadAccountByIdRepositorySpy } = makeSut()
     loadAccountByIdRepositorySpy.result = null
-    const accountId = faker.random.uuid()
-    const name = faker.image.avatar()
     const model = await sut.update({ accountId, name })
     expect(model).toBe(null)
   })
