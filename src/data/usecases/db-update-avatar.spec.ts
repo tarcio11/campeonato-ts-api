@@ -1,19 +1,22 @@
 import { DbUpdateAvatar } from './db-update-avatar'
-import { LoadAccountByIdRepositorySpy } from '../tests/mocks'
+import { LoadAccountByIdRepositorySpy, UpdateAvatarRepositorySpy } from '../tests/mocks'
 
 import faker from 'faker'
 
 type SutTypes = {
   sut: DbUpdateAvatar
   loadAccountByIdRepositorySpy: LoadAccountByIdRepositorySpy
+  updateAvatarRepositorySpy: UpdateAvatarRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByIdRepositorySpy = new LoadAccountByIdRepositorySpy()
-  const sut = new DbUpdateAvatar(loadAccountByIdRepositorySpy)
+  const updateAvatarRepositorySpy = new UpdateAvatarRepositorySpy()
+  const sut = new DbUpdateAvatar(loadAccountByIdRepositorySpy, updateAvatarRepositorySpy)
   return {
     sut,
-    loadAccountByIdRepositorySpy
+    loadAccountByIdRepositorySpy,
+    updateAvatarRepositorySpy
   }
 }
 
@@ -44,5 +47,12 @@ describe('UpdateAvatar', () => {
     loadAccountByIdRepositorySpy.result = null
     const model = await sut.update({ accountId, name })
     expect(model).toBe(null)
+  })
+
+  test('Should calls UpdateAvatarRepository with correct values', async () => {
+    const { sut, updateAvatarRepositorySpy, loadAccountByIdRepositorySpy } = makeSut()
+    await sut.update({ accountId, name })
+    expect(updateAvatarRepositorySpy.accountId).toBe(loadAccountByIdRepositorySpy.result.id)
+    expect(updateAvatarRepositorySpy.avatar).toBe(name)
   })
 })
