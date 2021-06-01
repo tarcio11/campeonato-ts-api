@@ -55,4 +55,11 @@ describe('UpdateAvatar', () => {
     expect(updateAvatarRepositorySpy.accountId).toBe(loadAccountByIdRepositorySpy.result.id)
     expect(updateAvatarRepositorySpy.avatar).toBe(name)
   })
+
+  test('Should throw if UpdateAvatarRepository throws', async () => {
+    const { sut, updateAvatarRepositorySpy } = makeSut()
+    jest.spyOn(updateAvatarRepositorySpy, 'updateAvatar').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.update({ accountId, name })
+    await expect(promise).rejects.toThrow()
+  })
 })
