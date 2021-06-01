@@ -1,11 +1,17 @@
 import { UpdateAvatar } from '../../domain/usecases'
-import { LoadAccountByIdRepository } from '../protocols'
+import { LoadAccountByIdRepository, UpdateAvatarRepository } from '../protocols'
 
 export class DbUpdateAvatar implements UpdateAvatar {
-  constructor (private readonly loadAccountByIdRepository: LoadAccountByIdRepository) {}
+  constructor (
+    private readonly loadAccountByIdRepository: LoadAccountByIdRepository,
+    private readonly updateAvatarRepository: UpdateAvatarRepository
+  ) {}
 
   async update (avatar: UpdateAvatar.Params): Promise<UpdateAvatar.Result> {
-    await this.loadAccountByIdRepository.loadById(avatar.accountId)
+    const account = await this.loadAccountByIdRepository.loadById(avatar.accountId)
+    if (account) {
+      await this.updateAvatarRepository.updateAvatar(account.id, avatar.name)
+    }
     return null
   }
 }
