@@ -62,4 +62,11 @@ describe('UpdateAvatar', () => {
     const promise = sut.update({ accountId, name })
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an data on success', async () => {
+    const { sut, updateAvatarRepositorySpy } = makeSut()
+    const avatarModel = await sut.update({ accountId, name })
+    expect(avatarModel.avatar).toBe(updateAvatarRepositorySpy.avatar)
+    expect(avatarModel.avatar_url).toBe(updateAvatarRepositorySpy.avatar)
+  })
 })
