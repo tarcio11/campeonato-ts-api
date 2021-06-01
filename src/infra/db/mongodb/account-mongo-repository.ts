@@ -1,7 +1,7 @@
 import { MongoHelper } from './mongo-helper'
-import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository } from '../../../data/protocols'
+import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository, UpdateAvatarRepository } from '../../../data/protocols'
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAvatarRepository {
   async add (data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = accountCollection.insertOne(data)
@@ -60,5 +60,16 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
       }
     })
     return account && MongoHelper.map(account)
+  }
+
+  async updateAvatar (accountId: string, avatar: string): Promise<void> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.updateOne({
+      _id: accountId
+    }, {
+      $set: {
+        avatar
+      }
+    })
   }
 }
