@@ -148,4 +148,19 @@ describe('AccountMongoRepository', () => {
       expect(account).toBeFalsy()
     })
   })
+
+  describe('updateAvatar()', () => {
+    test('Should update the account avatar on success', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      const res = await accountCollection.insertOne(addAccountParams)
+      const fakeAccount = res.ops[0]
+      expect(fakeAccount.avatar).toBeFalsy()
+      const avatar = faker.image.avatar()
+      await sut.updateAvatar(fakeAccount._id, avatar)
+      const account = await accountCollection.findOne({ _id: fakeAccount._id })
+      expect(account).toBeTruthy()
+      expect(account.avatar).toBe(avatar)
+    })
+  })
 })
