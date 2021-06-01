@@ -11,6 +11,10 @@ export class DbUpdateAvatar implements UpdateAvatar {
     const account = await this.loadAccountByIdRepository.loadById(avatar.accountId)
     if (account) {
       await this.updateAvatarRepository.updateAvatar(account.id, avatar.name)
+      return {
+        avatar: avatar.name,
+        avatar_url: avatar.name
+      }
     }
     return null
   }
