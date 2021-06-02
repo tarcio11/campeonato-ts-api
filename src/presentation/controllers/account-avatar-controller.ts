@@ -1,5 +1,5 @@
 import { Controller, HttpResponse, Validation } from '../protocols'
-import { badRequest, serverError } from '../helpers'
+import { badRequest, ok, serverError } from '../helpers'
 import { UpdateAvatar, UploadAvatar } from '../../domain/usecases'
 
 export class AccountAvatarController implements Controller {
@@ -15,10 +15,10 @@ export class AccountAvatarController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const { name, type, content, size, extension } = request
-      await this.uploadAvatar.upload({ name, type, content, size, extension })
-      await this.updateAvatar.update(request)
-      return null
+      const { name, type, content, size, extension, accountId } = request
+      const avatar = await this.uploadAvatar.upload({ name, type, content, size, extension })
+      const AvatarModel = await this.updateAvatar.update({ accountId, name: avatar.avatar_url })
+      return ok(AvatarModel)
     } catch (error) {
       return serverError(error)
     }
