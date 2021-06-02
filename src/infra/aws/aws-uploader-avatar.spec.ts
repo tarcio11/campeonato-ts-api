@@ -37,4 +37,11 @@ describe('AwsUploaderAvatar', () => {
       ACL: 'private'
     })
   })
+
+  test('should throw if putObject throws', async () => {
+    const sut = makeSut()
+    jest.spyOn(S3.prototype, 'putObject').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.upload(mockUploadAvatarParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
