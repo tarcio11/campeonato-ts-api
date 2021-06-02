@@ -31,7 +31,7 @@ export class AwsUploaderAvatar implements UploadedAvatar {
       .promise()
 
     return {
-      avatar_url: `${this.bucketName}/${fileKey}`
+      avatar_url: `${this.bucketName}.s3.amazonaws.com/${fileKey}`
     }
   }
 

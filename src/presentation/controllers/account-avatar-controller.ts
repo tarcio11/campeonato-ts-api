@@ -17,8 +17,11 @@ export class AccountAvatarController implements Controller {
       }
       const { name, type, content, size, extension, accountId } = request
       const avatar = await this.uploadAvatar.upload({ name, type, content, size, extension })
-      const AvatarModel = await this.updateAvatar.update({ accountId, name: avatar.avatar_url })
-      return ok(AvatarModel)
+      const avatarModel = await this.updateAvatar.update({ accountId, name })
+      return ok({
+        avatar: avatarModel.avatar,
+        avatar_url: `https://${avatar.avatar_url}`
+      })
     } catch (error) {
       return serverError(error)
     }

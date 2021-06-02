@@ -56,7 +56,7 @@ describe('AccountAvatarController', () => {
   })
 
   test('Should calls UpdateAvatar with correct values', async () => {
-    const { sut, updateAvatarSpy, uploadAvatarSpy } = makeSut()
+    const { sut, updateAvatarSpy } = makeSut()
     const request = ({
       accountId: faker.random.uuid(),
       name: faker.internet.url(),
@@ -68,7 +68,7 @@ describe('AccountAvatarController', () => {
     await sut.handle(request)
     expect(updateAvatarSpy.avatar).toEqual({
       accountId: request.accountId,
-      name: uploadAvatarSpy.result.avatar_url
+      name: request.name
     })
   })
 
@@ -123,7 +123,8 @@ describe('AccountAvatarController', () => {
   })
 
   test('Should return 200 with data on success', async () => {
-    const { sut, updateAvatarSpy } = makeSut()
+    const { sut, updateAvatarSpy, uploadAvatarSpy } = makeSut()
+
     const request = ({
       accountId: faker.random.uuid(),
       name: faker.internet.url(),
@@ -133,6 +134,9 @@ describe('AccountAvatarController', () => {
       extension: null
     })
     const httpResponse = await sut.handle(request)
-    expect(httpResponse).toEqual(ok(updateAvatarSpy.result))
+    expect(httpResponse).toEqual(ok({
+      avatar: updateAvatarSpy.result.avatar,
+      avatar_url: `https://${uploadAvatarSpy.result.avatar_url}`
+    }))
   })
 })

@@ -63,7 +63,7 @@ describe('AwsUploaderAvatar', () => {
     const timestamp = mockDate()
     const result = await sut.upload(uploadAvatarParams)
     expect(result).toEqual({
-      avatar_url: `aws-bucket/${getFileKey(uploadAvatarParams, timestamp)}`
+      avatar_url: `aws-bucket.s3.amazonaws.com/${getFileKey(uploadAvatarParams, timestamp)}`
     })
   })
 })
