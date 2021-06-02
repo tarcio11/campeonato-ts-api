@@ -37,4 +37,11 @@ describe('UploadAvatar', () => {
     const avatarModel = await sut.upload(mockUploadAvatarParams())
     expect(avatarModel.avatar_url).toEqual(uploadedAvatarSpy.result.avatar_url)
   })
+
+  test('Should return null if UploadedAvatar returns null', async () => {
+    const { sut, uploadedAvatarSpy } = makeSut()
+    uploadedAvatarSpy.result = null
+    const avatarModel = await sut.upload(mockUploadAvatarParams())
+    expect(avatarModel).toBe(null)
+  })
 })
