@@ -31,4 +31,10 @@ describe('UploadAvatar', () => {
     const promise = sut.upload(uploadAvatarParams)
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return avatar_url if UploadedAvatar on success', async () => {
+    const { sut, uploadedAvatarSpy } = makeSut()
+    const avatarModel = await sut.upload(mockUploadAvatarParams())
+    expect(avatarModel.avatar_url).toEqual(uploadedAvatarSpy.result.avatar_url)
+  })
 })
