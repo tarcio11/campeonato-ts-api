@@ -1,5 +1,6 @@
 import { AwsUploaderAvatar } from './aws-uploader-avatar'
 import { mockUploadAvatarParams } from '../../domain/tests/mocks'
+import { UploadedAvatar } from '../../data/protocols'
 
 import { S3 } from 'aws-sdk'
 import faker from 'faker'
@@ -13,6 +14,10 @@ jest.mock('../../main/config/env', () => ({
   defaultRegion: 'region',
   defaultFilesACL: 'private'
 }))
+
+const getFileKey = (file: UploadedAvatar.Params, timestamp: number): string => {
+  return `${file.name}-${timestamp}.${file.extension}`
+}
 
 const mockDate = (): number => {
   const timestamp = faker.random.number()
@@ -43,5 +48,22 @@ describe('AwsUploaderAvatar', () => {
     jest.spyOn(S3.prototype, 'putObject').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.upload(mockUploadAvatarParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should throw if putObject throws', async () => {
+    const sut = makeSut()
+    jest.spyOn(S3.prototype, 'putObject').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.upload(mockUploadAvatarParams())
+    await expect(promise).rejects.toThrow()
+  })
+
+  it('should return the uploaded file path on success', async () => {
+    const sut = makeSut()
+    const uploadAvatarParams = mockUploadAvatarParams()
+    const timestamp = mockDate()
+    const result = await sut.upload(uploadAvatarParams)
+    expect(result).toEqual({
+      avatar_url: `aws-bucket/${getFileKey(uploadAvatarParams, timestamp)}`
+    })
   })
 })
