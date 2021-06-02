@@ -1,6 +1,6 @@
 import { AccountAvatarController } from './account-avatar-controller'
 import { UpdateAvatarSpy, UploadAvatarSpy, ValidationSpy } from '../tests/mocks'
-import { badRequest, serverError } from '../helpers'
+import { badRequest, ok, serverError } from '../helpers'
 import { MissingParamError, ServerError } from '../errors'
 
 import faker from 'faker'
@@ -56,7 +56,7 @@ describe('AccountAvatarController', () => {
   })
 
   test('Should calls UpdateAvatar with correct values', async () => {
-    const { sut, updateAvatarSpy } = makeSut()
+    const { sut, updateAvatarSpy, uploadAvatarSpy } = makeSut()
     const request = ({
       accountId: faker.random.uuid(),
       name: faker.internet.url(),
@@ -66,7 +66,10 @@ describe('AccountAvatarController', () => {
       extension: null
     })
     await sut.handle(request)
-    expect(updateAvatarSpy.avatar).toEqual(request)
+    expect(updateAvatarSpy.avatar).toEqual({
+      accountId: request.accountId,
+      name: uploadAvatarSpy.result.avatar_url
+    })
   })
 
   test('Should return 500 if UpdateAvatar throws', async () => {
@@ -117,5 +120,19 @@ describe('AccountAvatarController', () => {
     })
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(serverError(new ServerError(null)))
+  })
+
+  test('Should return 200 with data on success', async () => {
+    const { sut, updateAvatarSpy } = makeSut()
+    const request = ({
+      accountId: faker.random.uuid(),
+      name: faker.internet.url(),
+      size: null,
+      content: null,
+      type: null,
+      extension: null
+    })
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(ok(updateAvatarSpy.result))
   })
 })
