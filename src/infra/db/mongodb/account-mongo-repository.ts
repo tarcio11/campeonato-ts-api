@@ -1,7 +1,7 @@
 import { MongoHelper } from './mongo-helper'
-import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository, UpdateAvatarRepository } from '../../../data/protocols'
+import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository } from '../../../data/protocols'
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAvatarRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository {
   async add (data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = accountCollection.insertOne(data)
@@ -54,6 +54,18 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
       }, {
         role: 'admin'
       }]
+    }, {
+      projection: {
+        _id: 1
+      }
+    })
+    return account && MongoHelper.map(account)
+  }
+
+  async loadById (accountId: string): Promise<LoadAccountByIdRepository.Result> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({
+      _id: accountId
     }, {
       projection: {
         _id: 1
