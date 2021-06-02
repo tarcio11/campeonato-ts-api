@@ -23,4 +23,12 @@ describe('UploadAvatar', () => {
     await sut.upload(uploadAvatarParams)
     expect(uploadedAvatarSpy.options).toEqual(uploadAvatarParams)
   })
+
+  test('Should throws if UploadedAvatar throws', async () => {
+    const { sut, uploadedAvatarSpy } = makeSut()
+    jest.spyOn(uploadedAvatarSpy, 'upload').mockImplementationOnce(() => { throw new Error() })
+    const uploadAvatarParams = mockUploadAvatarParams()
+    const promise = sut.upload(uploadAvatarParams)
+    await expect(promise).rejects.toThrow()
+  })
 })
