@@ -1,11 +1,14 @@
-import { Controller, Validation } from '../protocols'
-import { HttpResponse } from 'aws-sdk'
+import { Controller, HttpResponse, Validation } from '../protocols'
+import { badRequest } from '../helpers'
 
 export class AccountAvatarController implements Controller {
   constructor (private readonly validation: Validation) {}
 
   async handle (request: UpdateAvatarController.Request): Promise<HttpResponse> {
-    await this.validation.validate(request)
+    const error = this.validation.validate(request)
+    if (error) {
+      return badRequest(error)
+    }
     return null
   }
 }
