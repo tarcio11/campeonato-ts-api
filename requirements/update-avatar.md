@@ -4,7 +4,7 @@
 1. ⛔️ Recebe uma requisição do tipo **PATCH** na rota **/api/users/avatar**
 2. ⛔️ Valida dados obrigatórios **name (avatar)** 
 3. ⛔️ Valida se a requisição foi feita por um usuário
-4. ⛔️ Fazer upload do arquivo para nuvem (aws)
+4. ✅ Fazer upload do arquivo para nuvem (aws)
 5. ✅ Criar um registro avatar com o name fornecido caso não tenha um registo
 6. ✅ Atualiza um avatar com o name fornecido caso já tenha um registro
 7. ⛔️ Retorna 200 com o caminho do avatarUrl
