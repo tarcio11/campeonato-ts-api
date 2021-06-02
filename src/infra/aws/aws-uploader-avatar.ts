@@ -31,12 +31,12 @@ export class AwsUploaderAvatar implements UploadedAvatar {
       .promise()
 
     return {
-      avatar_url: `${this.bucketName}${fileKey}`
+      avatar_url: `${this.bucketName}/${fileKey}`
     }
   }
 
   async upload (file: UploadedAvatar.Params): Promise<UploadedAvatar.Result> {
-    await this.uploadFile(file)
-    return null
+    const avatarModel = await this.uploadFile(file)
+    return avatarModel
   }
 }
