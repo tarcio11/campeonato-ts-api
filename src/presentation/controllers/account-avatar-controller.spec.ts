@@ -1,7 +1,7 @@
 import { AccountAvatarController } from './account-avatar-controller'
 import { UpdateAvatarSpy, ValidationSpy } from '../tests/mocks'
-import { badRequest } from '../helpers'
-import { MissingParamError } from '../errors'
+import { badRequest, serverError } from '../helpers'
+import { MissingParamError, ServerError } from '../errors'
 
 import faker from 'faker'
 
@@ -52,5 +52,16 @@ describe('AccountAvatarController', () => {
     })
     await sut.handle(request)
     expect(updateAvatarSpy.avatar).toEqual(request)
+  })
+
+  test('Should return 500 if UpdateAvatar throws', async () => {
+    const { sut, updateAvatarSpy } = makeSut()
+    jest.spyOn(updateAvatarSpy, 'update').mockImplementationOnce(() => { throw new Error() })
+    const request = ({
+      accountId: faker.random.uuid(),
+      name: faker.internet.url()
+    })
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(serverError(new ServerError(null)))
   })
 })
