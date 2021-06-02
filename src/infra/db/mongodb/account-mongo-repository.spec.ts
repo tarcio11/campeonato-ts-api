@@ -149,6 +149,17 @@ describe('AccountMongoRepository', () => {
     })
   })
 
+  describe('loadById()', () => {
+    test('Should return true if loadById on success', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      const account = await accountCollection.insertOne(addAccountParams)
+      const fakeAccount = account.ops[0]
+      const exist = await sut.loadById(fakeAccount._id)
+      expect(exist.id).toBeTruthy()
+    })
+  })
+
   describe('updateAvatar()', () => {
     test('Should update the account avatar on success', async () => {
       const sut = makeSut()
