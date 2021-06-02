@@ -81,6 +81,7 @@ Essa Api tem como objetivo gerenciar um campeonato de futebol de video game feit
 * MockDate
 * Module-Alias
 * Copyfiles
+* Aws-sdk
 
 > ## Features do Node
 
