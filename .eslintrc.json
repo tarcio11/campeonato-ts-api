@@ -8,6 +8,7 @@
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-misused-promises": "off",
-    "import/export": "off"
+    "import/export": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off"
   }
 }
