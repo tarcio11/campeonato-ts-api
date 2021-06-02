@@ -1,4 +1,4 @@
-import { AddAccount, Authentication, LoadAccountByToken } from '../../../domain/usecases'
+import { AddAccount, Authentication, LoadAccountByToken, UpdateAvatar } from '../../../domain/usecases'
 
 import faker from 'faker'
 
@@ -35,6 +35,19 @@ export class LoadAccountByTokenSpy implements LoadAccountByToken {
   async load (accessToken: string, role?: string): Promise<LoadAccountByToken.Result> {
     this.accessToken = accessToken
     this.role = role
+    return this.result
+  }
+}
+
+export class UpdateAvatarSpy implements UpdateAvatar {
+  avatar: UpdateAvatar.Params
+  result = {
+    avatar: faker.image.avatar(),
+    avatar_url: faker.internet.url()
+  }
+
+  async update (avatar: UpdateAvatar.Params): Promise<UpdateAvatar.Result> {
+    this.avatar = avatar
     return this.result
   }
 }
