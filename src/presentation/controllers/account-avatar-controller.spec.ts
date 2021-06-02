@@ -1,5 +1,5 @@
 import { AccountAvatarController } from './account-avatar-controller'
-import { UpdateAvatarSpy, ValidationSpy } from '../tests/mocks'
+import { UpdateAvatarSpy, UploadAvatarSpy, ValidationSpy } from '../tests/mocks'
 import { badRequest, serverError } from '../helpers'
 import { MissingParamError, ServerError } from '../errors'
 
@@ -9,16 +9,19 @@ type SutTypes = {
   sut: AccountAvatarController
   validationSpy: ValidationSpy
   updateAvatarSpy: UpdateAvatarSpy
+  uploadAvatarSpy: UploadAvatarSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
   const updateAvatarSpy = new UpdateAvatarSpy()
-  const sut = new AccountAvatarController(validationSpy, updateAvatarSpy)
+  const uploadAvatarSpy = new UploadAvatarSpy()
+  const sut = new AccountAvatarController(validationSpy, updateAvatarSpy, uploadAvatarSpy)
   return {
     sut,
     validationSpy,
-    updateAvatarSpy
+    updateAvatarSpy,
+    uploadAvatarSpy
   }
 }
 
@@ -27,7 +30,11 @@ describe('AccountAvatarController', () => {
     const { sut, validationSpy } = makeSut()
     const request = {
       name: faker.internet.url(),
-      accountId: null
+      accountId: null,
+      size: null,
+      content: null,
+      type: null,
+      extension: null
     }
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
@@ -38,7 +45,11 @@ describe('AccountAvatarController', () => {
     validationSpy.error = new MissingParamError(faker.random.word())
     const request = {
       name: faker.internet.url(),
-      accountId: null
+      accountId: null,
+      size: null,
+      content: null,
+      type: null,
+      extension: null
     }
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
@@ -48,7 +59,11 @@ describe('AccountAvatarController', () => {
     const { sut, updateAvatarSpy } = makeSut()
     const request = ({
       accountId: faker.random.uuid(),
-      name: faker.internet.url()
+      name: faker.internet.url(),
+      size: null,
+      content: null,
+      type: null,
+      extension: null
     })
     await sut.handle(request)
     expect(updateAvatarSpy.avatar).toEqual(request)
@@ -59,9 +74,33 @@ describe('AccountAvatarController', () => {
     jest.spyOn(updateAvatarSpy, 'update').mockImplementationOnce(() => { throw new Error() })
     const request = ({
       accountId: faker.random.uuid(),
-      name: faker.internet.url()
+      name: faker.internet.url(),
+      size: null,
+      content: null,
+      type: null,
+      extension: null
     })
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(serverError(new ServerError(null)))
+  })
+
+  test('Should calls UploadAvatar with correct values', async () => {
+    const { sut, uploadAvatarSpy } = makeSut()
+    const request = ({
+      accountId: faker.random.uuid(),
+      name: faker.image.image(),
+      size: faker.random.number(10),
+      content: faker.random.alphaNumeric(),
+      type: '.jpg',
+      extension: faker.image.fashion()
+    })
+    await sut.handle(request)
+    expect(uploadAvatarSpy.file).toEqual({
+      name: request.name,
+      size: request.size,
+      content: request.content,
+      type: request.type,
+      extension: request.extension
+    })
   })
 })
