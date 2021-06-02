@@ -1,5 +1,5 @@
 import { Controller, HttpResponse, Validation } from '../protocols'
-import { badRequest } from '../helpers'
+import { badRequest, serverError } from '../helpers'
 import { UpdateAvatar } from '../../domain/usecases'
 
 export class AccountAvatarController implements Controller {
@@ -9,12 +9,16 @@ export class AccountAvatarController implements Controller {
   ) {}
 
   async handle (request: UpdateAvatarController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.updateAvatar.update(request)
+      return null
+    } catch (error) {
+      return serverError(error)
     }
-    await this.updateAvatar.update(request)
-    return null
   }
 }
 
