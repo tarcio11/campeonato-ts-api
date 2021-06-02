@@ -4,5 +4,7 @@ export default {
   jwtSecret: process.env.JWT_SECRET || 'saA<cj6=-UW',
   bucketName: process.env.AWS_S3_BUCKET,
   defaultRegion: process.env.DEFAULT_REGION,
-  defaultFilesACL: process.env.DEFAULT_FILES_ACL
+  defaultFilesACL: process.env.DEFAULT_FILES_ACL,
+  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY
 }

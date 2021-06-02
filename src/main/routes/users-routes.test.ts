@@ -1,8 +1,12 @@
-import request from 'supertest'
-import { MongoHelper } from '../../infra/db/mongodb'
 import app from '../config/app'
+import { MongoHelper } from '../../infra/db/mongodb'
 
-describe('SignUp Routes', () => {
+import { Collection } from 'mongodb'
+import request from 'supertest'
+
+let accountCollection: Collection
+
+describe('Users Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
@@ -12,7 +16,7 @@ describe('SignUp Routes', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
