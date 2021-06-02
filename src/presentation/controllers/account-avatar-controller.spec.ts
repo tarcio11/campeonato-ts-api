@@ -103,4 +103,19 @@ describe('AccountAvatarController', () => {
       extension: request.extension
     })
   })
+
+  test('Should return 500 if UploadAvatar return throws', async () => {
+    const { sut, uploadAvatarSpy } = makeSut()
+    jest.spyOn(uploadAvatarSpy, 'upload').mockImplementationOnce(() => { throw new Error() })
+    const request = ({
+      accountId: faker.random.uuid(),
+      name: faker.image.image(),
+      size: faker.random.number(10),
+      content: faker.random.alphaNumeric(),
+      type: '.jpg',
+      extension: faker.image.fashion()
+    })
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(serverError(new ServerError(null)))
+  })
 })
