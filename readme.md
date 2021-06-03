@@ -17,7 +17,8 @@ Essa Api tem como objetivo gerenciar um campeonato de futebol de video game feit
 
 1. [Cadastro](./requirements/signup.md)
 2. [Login](./requirements/login.md)
-3. [Update-avatar](./requirements/update-avatar.md)
+3. [Update avatar](./requirements/update-avatar.md)
+4. [Lista usuários](./requirements/load-accounts.md)
 
 
 > ## Princípios
