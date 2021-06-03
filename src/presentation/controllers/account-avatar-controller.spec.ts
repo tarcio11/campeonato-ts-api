@@ -56,7 +56,7 @@ describe('AccountAvatarController', () => {
   })
 
   test('Should calls UpdateAvatar with correct values', async () => {
-    const { sut, updateAvatarSpy } = makeSut()
+    const { sut, updateAvatarSpy, uploadAvatarSpy } = makeSut()
     const request = ({
       accountId: faker.random.uuid(),
       name: faker.internet.url(),
@@ -68,7 +68,7 @@ describe('AccountAvatarController', () => {
     await sut.handle(request)
     expect(updateAvatarSpy.avatar).toEqual({
       accountId: request.accountId,
-      name: request.name
+      name: uploadAvatarSpy.result.avatar_url
     })
   })
 
