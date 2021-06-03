@@ -5,11 +5,11 @@ import { mockAddAccountParams } from '../../../domain/tests/mocks'
 import { Collection } from 'mongodb'
 import faker from 'faker'
 
+let accountCollection: Collection
+
 const makeSut = (): AccountMongoRepository => {
   return new AccountMongoRepository()
 }
-
-let accountCollection: Collection
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
@@ -172,6 +172,19 @@ describe('AccountMongoRepository', () => {
       const account = await accountCollection.findOne({ _id: fakeAccount._id })
       expect(account).toBeTruthy()
       expect(account.avatar).toBe(avatar)
+    })
+  })
+
+  describe('loadAll()', () => {
+    test('Should load all accounts on success', async () => {
+      const addAccountModels = [mockAddAccountParams(), mockAddAccountParams()]
+      await accountCollection.insertMany(addAccountModels)
+      const sut = makeSut()
+      const accounts = await sut.loadAll()
+      console.log(accounts)
+      expect(accounts.length).toBe(2)
+      expect(accounts[0].name).toBe(addAccountModels[0].name)
+      expect(accounts[1].name).toBe(addAccountModels[1].name)
     })
   })
 })
