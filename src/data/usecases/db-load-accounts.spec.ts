@@ -30,4 +30,11 @@ describe('DbLoadAccounts', () => {
     const accounts = await sut.load(faker.random.uuid())
     expect(accounts).toEqual(loadAccountsRepositorySpy.result)
   })
+
+  test('Should throw if LoadAccountsRepository throws', async () => {
+    const { sut, loadAccountsRepositorySpy } = makeSut()
+    jest.spyOn(loadAccountsRepositorySpy, 'loadAll').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.load(faker.random.uuid())
+    await expect(promise).rejects.toThrow()
+  })
 })
