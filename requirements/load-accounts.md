@@ -11,4 +11,4 @@
 
 1. ⛔️ Retorna erro **404** se a API não existir
 2. ⛔️ Retorna erro **403** se não for um usuário
-3. ⛔️ Retorna erro **500** se der erro ao tentar carregar uma lista de usuários
+3. ✅ Retorna erro **500** se der erro ao tentar carregar uma lista de usuários
