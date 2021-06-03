@@ -1,7 +1,7 @@
 import { AccountModel } from '../../../../domain/models'
 
 export interface LoadAccountsRepository {
-  loadAll: (accountId: string) => Promise<LoadAccountsRepository.Result>
+  loadAll: () => Promise<LoadAccountsRepository.Result>
 }
 
 export namespace LoadAccountsRepository {

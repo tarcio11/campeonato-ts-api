@@ -84,14 +84,12 @@ export class UpdateAvatarRepositorySpy implements UpdateAvatarRepository {
 }
 
 export class LoadAccountsRepositorySpy implements LoadAccountsRepository {
-  accountId: string
-  result = {
+  result = [{
     name: faker.name.firstName(),
     avatar: faker.image.avatar()
-  }
+  }]
 
-  async loadAll (accountId: string): Promise<LoadAccountsRepository.Result> {
-    this.accountId = accountId
+  async loadAll (): Promise<LoadAccountsRepository.Result> {
     return this.result
   }
 }
