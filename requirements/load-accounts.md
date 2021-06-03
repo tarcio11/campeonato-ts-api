@@ -5,7 +5,7 @@
 1. ⛔️ Recebe uma requisição do tipo **GET** na rota **/api/users**
 2. ⛔️ Valida se a requisição foi feita por um **usuário**
 3. ✅ Retorna **204** se não tiver nenhum usuário
-4. ⛔️ Retorna **200** com uma lista de usuários
+4. ✅ Retorna **200** com uma lista de usuários
 
 > ## Exceções
 
