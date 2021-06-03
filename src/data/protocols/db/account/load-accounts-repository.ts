@@ -5,5 +5,5 @@ export interface LoadAccountsRepository {
 }
 
 export namespace LoadAccountsRepository {
-  export type Result = AccountModel
+  export type Result = AccountModel[]
 }
