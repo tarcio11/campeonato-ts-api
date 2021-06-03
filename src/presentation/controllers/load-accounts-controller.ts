@@ -1,12 +1,12 @@
-import { HttpResponse } from 'aws-sdk'
+import { Controller, HttpResponse } from '../protocols'
 import { LoadAccounts } from '../../domain/usecases'
-import { Controller } from '../protocols'
+import { noContent, ok } from '../helpers'
 
 export class LoadAccountsController implements Controller {
   constructor (private readonly loadAccounts: LoadAccounts) {}
 
   async handle (): Promise<HttpResponse> {
-    await this.loadAccounts.load()
-    return null
+    const accountModels = await this.loadAccounts.load()
+    return accountModels.length ? ok(accountModels) : noContent()
   }
 }
