@@ -88,6 +88,6 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
   async loadAll (): Promise<LoadAccountsRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const accounts = await accountCollection.find().toArray()
-    return accounts
+    return MongoHelper.accountMap(accounts)
   }
 }

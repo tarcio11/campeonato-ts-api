@@ -27,5 +27,14 @@ export const MongoHelper = {
   map: (data: any): any => {
     const { _id, ...rest } = data
     return { ...rest, id: _id }
+  },
+
+  accountMap: (data: any): any => {
+    return data.map(item => ({
+      id: item._id,
+      name: item.name,
+      email: item.email,
+      avatar: item.avatar
+    }))
   }
 }

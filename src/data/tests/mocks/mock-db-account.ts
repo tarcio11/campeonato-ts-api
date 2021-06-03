@@ -85,7 +85,9 @@ export class UpdateAvatarRepositorySpy implements UpdateAvatarRepository {
 
 export class LoadAccountsRepositorySpy implements LoadAccountsRepository {
   result = [{
+    id: faker.random.uuid(),
     name: faker.name.firstName(),
+    email: faker.internet.email(),
     avatar: faker.image.avatar()
   }]
 
