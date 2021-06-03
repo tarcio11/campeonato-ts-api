@@ -186,5 +186,11 @@ describe('AccountMongoRepository', () => {
       expect(accounts[0].name).toBe(addAccountModels[0].name)
       expect(accounts[1].name).toBe(addAccountModels[1].name)
     })
+
+    test('Should load empty list', async () => {
+      const sut = makeSut()
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(0)
+    })
   })
 })
