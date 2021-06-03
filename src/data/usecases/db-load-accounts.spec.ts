@@ -24,4 +24,10 @@ describe('DbLoadAccounts', () => {
     await sut.load(accountId)
     expect(loadAccountsRepositorySpy.accountId).toBe(accountId)
   })
+
+  test('Should return a list of accounts on success', async () => {
+    const { sut, loadAccountsRepositorySpy } = makeSut()
+    const accounts = await sut.load(faker.random.uuid())
+    expect(accounts).toEqual(loadAccountsRepositorySpy.result)
+  })
 })
