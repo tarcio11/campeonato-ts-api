@@ -1,6 +1,6 @@
 import { LoadAccountsController } from './load-accounts-controller'
 import { LoadAccountsSpy } from '../tests/mocks'
-import { ok } from '../helpers'
+import { noContent, ok } from '../helpers'
 
 type SutTypes = {
   sut: LoadAccountsController
@@ -27,5 +27,12 @@ describe('LoadAccounts Controller', () => {
     const { sut, loadAccountsSpy } = makeSut()
     const httpResponse = await sut.handle()
     expect(httpResponse).toEqual(ok(loadAccountsSpy.result))
+  })
+
+  test('Should return 204 if LoadAccounts return empty', async () => {
+    const { sut, loadAccountsSpy } = makeSut()
+    loadAccountsSpy.result = []
+    const httpResponse = await sut.handle()
+    expect(httpResponse).toEqual(noContent())
   })
 })
