@@ -1,6 +1,6 @@
 import { LoadAccountByIdController } from './load-account-by-id-controller'
 import { LoadAccountByIdSpy } from '../tests/mocks'
-import { ok, unauthorized } from '../helpers'
+import { ok, serverError, unauthorized } from '../helpers'
 
 import faker from 'faker'
 
@@ -45,5 +45,15 @@ describe('LoadAccounts Controller', () => {
     }
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(ok(loadAccountByIdSpy.result))
+  })
+
+  test('Should return 500 if LoadAccountById throws', async () => {
+    const { sut, loadAccountByIdSpy } = makeSut()
+    jest.spyOn(loadAccountByIdSpy, 'load').mockImplementationOnce(() => { throw new Error() })
+    const request = {
+      accountId: faker.random.uuid()
+    }
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
