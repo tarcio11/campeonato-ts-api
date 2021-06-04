@@ -1,11 +1,15 @@
 import { Controller, HttpResponse } from '../protocols'
 import { LoadAccountById } from '../../domain/usecases'
+import { unauthorized } from '../helpers'
 
 export class LoadAccountByIdController implements Controller {
   constructor (private readonly loadAccountById: LoadAccountById) {}
 
   async handle (request: LoadAccountByIdController.Request): Promise<HttpResponse> {
-    await this.loadAccountById.load(request.accountId)
+    const accountModel = await this.loadAccountById.load(request.accountId)
+    if (!accountModel) {
+      return unauthorized()
+    }
     return null
   }
 }
