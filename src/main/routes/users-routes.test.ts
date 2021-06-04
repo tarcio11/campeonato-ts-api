@@ -75,5 +75,19 @@ describe('Users Routes', () => {
         .get(`/api/users/${'any_accountId'}/profile`)
         .expect(403)
     })
+
+    test('Should return 200 on load survey result with accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const res = await accountCollection.insertOne({
+        name: 'Tarcio',
+        email: 'tarcio.mail@gmail.com',
+        password: '123'
+      })
+      await request(app)
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        .get(`/api/users/${res.ops[0]._id}/profile`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
