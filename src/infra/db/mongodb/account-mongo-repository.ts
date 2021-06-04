@@ -1,7 +1,7 @@
 import { MongoHelper } from './mongo-helper'
-import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository, LoadAccountsRepository } from '../../../data/protocols'
+import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository, LoadAccountsRepository, LoadAccountByIdResultRepository } from '../../../data/protocols'
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository, LoadAccountsRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository, LoadAccountsRepository, LoadAccountByIdResultRepository {
   async add (data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = accountCollection.insertOne(data)
@@ -89,5 +89,11 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
     const accountCollection = await MongoHelper.getCollection('accounts')
     const accounts = await accountCollection.find().toArray()
     return MongoHelper.accountMap(accounts)
+  }
+
+  async loadAccountById (accountId: string): Promise<LoadAccountByIdResultRepository.Result> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({ _id: accountId })
+    return account && MongoHelper.map(account)
   }
 }
