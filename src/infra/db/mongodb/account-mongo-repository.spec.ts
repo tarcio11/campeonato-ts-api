@@ -203,5 +203,11 @@ describe('AccountMongoRepository', () => {
       expect(fakeAccount.name).toBe(result.name)
       expect(fakeAccount.email).toBe(result.email)
     })
+
+    test('Should return null if account does not exists', async () => {
+      const sut = makeSut()
+      const account = await sut.loadById(faker.random.uuid())
+      expect(account).toBeFalsy()
+    })
   })
 })
