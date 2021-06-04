@@ -1,6 +1,6 @@
 import { LoadAccountByIdController } from './load-account-by-id-controller'
 import { LoadAccountByIdSpy } from '../tests/mocks'
-import { unauthorized } from '../helpers'
+import { ok, unauthorized } from '../helpers'
 
 import faker from 'faker'
 
@@ -36,5 +36,14 @@ describe('LoadAccounts Controller', () => {
     }
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut, loadAccountByIdSpy } = makeSut()
+    const request = {
+      accountId: faker.random.uuid()
+    }
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(ok(loadAccountByIdSpy.result))
   })
 })
