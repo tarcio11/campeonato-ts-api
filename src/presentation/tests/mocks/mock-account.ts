@@ -1,4 +1,4 @@
-import { AddAccount, Authentication, LoadAccountByToken, LoadAccounts, UpdateAvatar } from '../../../domain/usecases'
+import { AddAccount, Authentication, LoadAccountById, LoadAccountByToken, LoadAccounts, UpdateAvatar } from '../../../domain/usecases'
 
 import faker from 'faker'
 
@@ -54,11 +54,28 @@ export class UpdateAvatarSpy implements UpdateAvatar {
 
 export class LoadAccountsSpy implements LoadAccounts {
   result = [{
+    id: faker.random.uuid(),
     name: faker.image.avatar(),
+    email: faker.internet.email(),
     avatar: faker.internet.url()
   }]
 
   async load (): Promise<LoadAccounts.Result> {
+    return this.result
+  }
+}
+
+export class LoadAccountByIdSpy implements LoadAccountById {
+  accountId: string
+  result = {
+    id: faker.random.uuid(),
+    name: faker.image.avatar(),
+    email: faker.internet.email(),
+    avatar: faker.internet.url()
+  }
+
+  async load (accountId: string): Promise<LoadAccountById.Result> {
+    this.accountId = accountId
     return this.result
   }
 }
