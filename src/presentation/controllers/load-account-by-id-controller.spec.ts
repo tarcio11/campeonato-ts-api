@@ -5,7 +5,7 @@ import { ok, serverError, unauthorized } from '../helpers'
 import faker from 'faker'
 
 const mockRequest = (): LoadAccountByIdController.Request => ({
-  accountId: faker.random.uuid()
+  userId: faker.random.uuid()
 })
 
 type SutTypes = {
@@ -27,7 +27,7 @@ describe('LoadAccounts Controller', () => {
     const { sut, loadAccountByIdSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
-    expect(loadAccountByIdSpy.accountId).toBe(request.accountId)
+    expect(loadAccountByIdSpy.accountId).toBe(request.userId)
   })
 
   test('Should return 403 if LoadAccountById returns null', async () => {

@@ -30,11 +30,19 @@ export const MongoHelper = {
   },
 
   accountMap: (data: any): any => {
-    return data.map(item => ({
-      id: item._id,
-      name: item.name,
-      email: item.email,
-      avatar: item.avatar
-    }))
+    if (data instanceof Array) {
+      return data.map(item => ({
+        id: item._id,
+        name: item.name,
+        email: item.email,
+        avatar: item.avatar
+      }))
+    }
+    return ({
+      id: data._id,
+      name: data.name,
+      email: data.email,
+      avatar: data.avatar
+    })
   }
 }

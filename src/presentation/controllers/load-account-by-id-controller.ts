@@ -7,7 +7,7 @@ export class LoadAccountByIdController implements Controller {
 
   async handle (request: LoadAccountByIdController.Request): Promise<HttpResponse> {
     try {
-      const accountModel = await this.loadAccountById.load(request.accountId)
+      const accountModel = await this.loadAccountById.load(request.userId)
       return accountModel ? ok(accountModel) : unauthorized()
     } catch (error) {
       return serverError(error)
@@ -17,6 +17,6 @@ export class LoadAccountByIdController implements Controller {
 
 export namespace LoadAccountByIdController {
   export type Request = {
-    accountId: string
+    userId: string
   }
 }

@@ -1,5 +1,6 @@
 import { MongoHelper } from './mongo-helper'
 import { AddAccountRepository, CheckAccountByEmailRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository, LoadAccountsRepository, LoadAccountByIdResultRepository } from '../../../data/protocols'
+import { ObjectId } from 'mongodb'
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, CheckAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAvatarRepository, LoadAccountByIdRepository, LoadAccountsRepository, LoadAccountByIdResultRepository {
   async add (data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
@@ -93,7 +94,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
 
   async loadAccountById (accountId: string): Promise<LoadAccountByIdResultRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const account = await accountCollection.findOne({ _id: accountId })
-    return account && MongoHelper.map(account)
+    const account = await accountCollection.findOne({ _id: new ObjectId(accountId) })
+    return account && MongoHelper.accountMap(account)
   }
 }
