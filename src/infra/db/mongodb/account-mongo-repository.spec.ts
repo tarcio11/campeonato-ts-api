@@ -181,7 +181,6 @@ describe('AccountMongoRepository', () => {
       await accountCollection.insertMany(addAccountModels)
       const sut = makeSut()
       const accounts = await sut.loadAll()
-      console.log(accounts)
       expect(accounts.length).toBe(2)
       expect(accounts[0].name).toBe(addAccountModels[0].name)
       expect(accounts[1].name).toBe(addAccountModels[1].name)
@@ -191,6 +190,18 @@ describe('AccountMongoRepository', () => {
       const sut = makeSut()
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(0)
+    })
+  })
+
+  describe('loadAccountById()', () => {
+    test('Should load an account on success', async () => {
+      const account = await accountCollection.insertOne(mockAddAccountParams())
+      const sut = makeSut()
+      const fakeAccount = account.ops[0]
+      const result = await sut.loadAccountById(fakeAccount._id)
+      expect(fakeAccount._id).toBeTruthy()
+      expect(fakeAccount.name).toBe(result.name)
+      expect(fakeAccount.email).toBe(result.email)
     })
   })
 })
