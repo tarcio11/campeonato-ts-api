@@ -27,8 +27,14 @@ describe('DbLoadAccounts', () => {
 
   test('Should return accountModel on success', async () => {
     const { sut, loadAccountByIdResultRepositorySpy } = makeSut()
-    const accountId = faker.random.uuid()
-    const accountResult = await sut.load(accountId)
+    const accountResult = await sut.load(faker.random.uuid())
     expect(accountResult).toEqual(loadAccountByIdResultRepositorySpy.result)
+  })
+
+  test('Should throw if loadAccountByIdResultRepositorySpy throws', async () => {
+    const { sut, loadAccountByIdResultRepositorySpy } = makeSut()
+    jest.spyOn(loadAccountByIdResultRepositorySpy, 'loadAccountById').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.load(faker.random.uuid())
+    await expect(promise).rejects.toThrow()
   })
 })
