@@ -1,5 +1,6 @@
 import { LoadAccountByIdController } from './load-account-by-id-controller'
 import { LoadAccountByIdSpy } from '../tests/mocks'
+import { unauthorized } from '../helpers'
 
 import faker from 'faker'
 
@@ -25,5 +26,15 @@ describe('LoadAccounts Controller', () => {
     }
     await sut.handle(request)
     expect(loadAccountByIdSpy.accountId).toBe(request.accountId)
+  })
+
+  test('Should return 403 if LoadAccountById returns null', async () => {
+    const { sut, loadAccountByIdSpy } = makeSut()
+    loadAccountByIdSpy.result = null
+    const request = {
+      accountId: faker.random.uuid()
+    }
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
