@@ -4,6 +4,10 @@ import { ok, serverError, unauthorized } from '../helpers'
 
 import faker from 'faker'
 
+const mockRequest = (): LoadAccountByIdController.Request => ({
+  accountId: faker.random.uuid()
+})
+
 type SutTypes = {
   sut: LoadAccountByIdController
   loadAccountByIdSpy: LoadAccountByIdSpy
@@ -21,9 +25,7 @@ const makeSut = (): SutTypes => {
 describe('LoadAccounts Controller', () => {
   test('Should call LoadAccountById with correct id', async () => {
     const { sut, loadAccountByIdSpy } = makeSut()
-    const request = {
-      accountId: faker.random.uuid()
-    }
+    const request = mockRequest()
     await sut.handle(request)
     expect(loadAccountByIdSpy.accountId).toBe(request.accountId)
   })
@@ -31,29 +33,20 @@ describe('LoadAccounts Controller', () => {
   test('Should return 403 if LoadAccountById returns null', async () => {
     const { sut, loadAccountByIdSpy } = makeSut()
     loadAccountByIdSpy.result = null
-    const request = {
-      accountId: faker.random.uuid()
-    }
-    const httpResponse = await sut.handle(request)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(unauthorized())
   })
 
   test('Should return 200 on success', async () => {
     const { sut, loadAccountByIdSpy } = makeSut()
-    const request = {
-      accountId: faker.random.uuid()
-    }
-    const httpResponse = await sut.handle(request)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(loadAccountByIdSpy.result))
   })
 
   test('Should return 500 if LoadAccountById throws', async () => {
     const { sut, loadAccountByIdSpy } = makeSut()
     jest.spyOn(loadAccountByIdSpy, 'load').mockImplementationOnce(() => { throw new Error() })
-    const request = {
-      accountId: faker.random.uuid()
-    }
-    const httpResponse = await sut.handle(request)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
