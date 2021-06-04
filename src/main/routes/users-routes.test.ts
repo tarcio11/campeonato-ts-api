@@ -68,4 +68,12 @@ describe('Users Routes', () => {
         .expect(200)
     })
   })
+
+  describe('GET /users/:userId/profile', () => {
+    test('Should return 403 on load account by id result without accessToken', async () => {
+      await request(app)
+        .get(`/api/users/${'any_accountId'}/profile`)
+        .expect(403)
+    })
+  })
 })
